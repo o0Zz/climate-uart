@@ -1,0 +1,30 @@
+# Syntax Coloring Map For Climate-UART
+
+# Datatypes (KEYWORD1)
+ClimateInterface	KEYWORD1
+ClimateSettings	KEYWORD1
+HeatpumpMode	KEYWORD1
+HeatpumpFanSpeed	KEYWORD1
+HeatpumpAction	KEYWORD1
+HeatpumpVaneMode	KEYWORD1
+
+# Classes (KEYWORD1)
+DaikinS21	KEYWORD1
+HitachiHLink	KEYWORD1
+LgAircon	KEYWORD1
+Mitsubishi	KEYWORD1
+Toshiba	KEYWORD1
+
+# Methods and Functions (KEYWORD2)
+init	KEYWORD2
+setState	KEYWORD2
+getState	KEYWORD2
+getRoomTemperature	KEYWORD2
+
+# Constants (LITERAL1)
+kSuccess	LITERAL1
+kTimeout	LITERAL1
+kInvalidData	LITERAL1
+kInvalidParameters	LITERAL1
+kInvalidNotConnected	LITERAL1
+kInvalidReply	LITERAL1
