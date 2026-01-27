@@ -1,5 +1,8 @@
+
 #include "climate_uart/common.h"
 #include "climate_uart/platform.h"
+
+#ifdef ARDUINO
 
 #include <Arduino.h>
 
@@ -81,3 +84,5 @@ ArduinoPlatformAutoInit g_auto_init;
 
 }  // namespace
 }  // namespace climate_uart
+
+#endif  // ARDUINO

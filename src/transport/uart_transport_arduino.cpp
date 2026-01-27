@@ -1,3 +1,4 @@
+#ifdef ARDUINO
 #include "climate_uart/transport/uart_transport_arduino.h"
 
 #include "climate_uart/common.h"
@@ -119,3 +120,4 @@ Result UartTransportArduino::write(const uint8_t *buffer, size_t size) {
 
 }  // namespace transport
 }  // namespace climate_uart
+#endif  // ARDUINO

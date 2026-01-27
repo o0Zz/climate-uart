@@ -7,7 +7,6 @@
 
 #ifdef ARDUINO
 #include <Arduino.h>
-#endif
 
 namespace climate_uart {
 namespace transport {
@@ -31,3 +30,5 @@ private:
 
 }  // namespace transport
 }  // namespace climate_uart
+
+#endif
