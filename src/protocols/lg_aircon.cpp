@@ -2,7 +2,7 @@
 
 #include <cstring>
 
-#include "climate_uart/common.h"
+#include "climate_uart/result.h"
 
 namespace climate_uart {
 namespace protocols {
@@ -70,7 +70,7 @@ Result LgAircon::readByte(uint8_t *byte, uint32_t timeoutMs) {
 	}
 
 	uint32_t start = time_now_ms();
-	while (timer_elapsed_ms(start) < timeoutMs) {
+	while (time_elapsed_ms(start) < timeoutMs) {
 		size_t size = 1;
 		Result ret = uart_.read(byte, &size);
 		if (ret == kSuccess && size == 1) {
@@ -118,7 +118,7 @@ Result LgAircon::writeMsg(uint8_t *buffer, size_t bufferSize) {
 
 Result LgAircon::readStatus(uint8_t *buffer, size_t bufferSize) {
 	uint32_t start = time_now_ms();
-	while (timer_elapsed_ms(start) < 2000) {
+	while (time_elapsed_ms(start) < 2000) {
 		Result ret = readMsg(buffer, bufferSize);
 		if (ret == kSuccess) {
 			uint8_t msgType = buffer[0];

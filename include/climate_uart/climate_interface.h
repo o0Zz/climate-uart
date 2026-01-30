@@ -1,6 +1,6 @@
 #pragma once
 
-#include "climate_uart/common.h"
+#include "climate_uart/result.h"
 #include "climate_uart/climate_types.h"
 
 namespace climate_uart {

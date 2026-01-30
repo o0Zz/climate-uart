@@ -13,14 +13,16 @@ enum class LogLevel {
     kError,
 };
 
-struct PlatformUtils {
-    uint32_t (*time_now_ms)();
-    uint32_t (*time_now_us)();
-    void (*log_v)(LogLevel level, const char *format, va_list args);
-    void (*log_buffer)(const uint8_t *buffer, size_t size);
-};
+uint32_t time_now_ms();
+uint32_t time_elapsed_ms(uint32_t start_ms);
 
-void set_platform_utils(const PlatformUtils *utils);
-const PlatformUtils *get_platform_utils();
+void log_buffer(const uint8_t *buffer, size_t size);
+void log_write(LogLevel level, const char *format, ...);
 
 }  // namespace climate_uart
+
+#define CLIMATE_LOG_DEBUG(...) ::climate_uart::log_write(::climate_uart::LogLevel::kDebug, __VA_ARGS__)
+#define CLIMATE_LOG_INFO(...) ::climate_uart::log_write(::climate_uart::LogLevel::kInfo, __VA_ARGS__)
+#define CLIMATE_LOG_WARNING(...) ::climate_uart::log_write(::climate_uart::LogLevel::kWarning, __VA_ARGS__)
+#define CLIMATE_LOG_ERROR(...) ::climate_uart::log_write(::climate_uart::LogLevel::kError, __VA_ARGS__)
+#define CLIMATE_LOG_BUFFER(buffer, size) ::climate_uart::log_buffer(buffer, size)

@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "climate_uart/common.h"
+#include "climate_uart/result.h"
 
 namespace climate_uart {
 namespace protocols {
@@ -157,7 +157,7 @@ Result HitachiHLink::readByte(uint8_t *byte, uint32_t timeoutMs) {
 	}
 
 	uint32_t start = time_now_ms();
-	while (timer_elapsed_ms(start) < timeoutMs) {
+	while (time_elapsed_ms(start) < timeoutMs) {
 		size_t size = 1;
 		Result ret = uart_.read(byte, &size);
 		if (ret == kSuccess && size == 1) {
@@ -175,7 +175,7 @@ Result HitachiHLink::readLine(char *buffer, uint16_t bufferSize, uint32_t timeou
 
 	uint32_t start = time_now_ms();
 	uint16_t index = 0;
-	while (timer_elapsed_ms(start) < timeoutMs) {
+	while (time_elapsed_ms(start) < timeoutMs) {
 		uint8_t byte = 0;
 		Result ret = readByte(&byte, timeoutMs);
 		if (ret == kSuccess) {

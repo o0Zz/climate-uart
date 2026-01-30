@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "climate_uart/common.h"
+#include "climate_uart/result.h"
 
 namespace climate_uart {
 namespace transport {

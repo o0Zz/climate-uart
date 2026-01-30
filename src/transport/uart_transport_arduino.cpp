@@ -1,7 +1,7 @@
 #ifdef ARDUINO
 #include "climate_uart/transport/uart_transport_arduino.h"
 
-#include "climate_uart/common.h"
+#include "climate_uart/result.h"
 
 namespace climate_uart {
 namespace transport {

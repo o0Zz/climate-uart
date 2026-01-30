@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "climate_uart/common.h"
+#include "climate_uart/result.h"
 
 namespace climate_uart {
 namespace protocols {
@@ -178,7 +178,7 @@ HeatpumpVaneMode Sharp::byteToVane(uint8_t val) {
 Result Sharp::readByte(uint8_t *byte, uint16_t timeoutMs) {
     uint32_t start = time_now_ms();
 
-    while (timer_elapsed_ms(start) < timeoutMs) {
+    while (time_elapsed_ms(start) < timeoutMs) {
         size_t size = 1;
         Result ret = uart_.read(byte, &size);
         if (ret == kSuccess && size == 1) {
