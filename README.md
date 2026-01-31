@@ -15,7 +15,24 @@ I started the ha-climate2mqtt project to communicate with many HVAC units, but I
 - [X] Hitachi H-Link (UART)
 - [ ] Fujitsu (UART)
 
-## Example
+## Example Arduino
+```cpp
+#include <ClimateUART.h>
+
+climate_uart::transport::UartTransportArduino uartArduino(Serial, 0, 0);
+climate_uart::protocols::DaikinS21 daikin(uartArduino);
+
+void setup() {
+  daikin.init();
+}
+
+void loop() {
+  climate_uart::ClimateSettings settings;
+  daikin.getState(settings);
+}
+```
+
+## Example ESP32
 ```cpp
 #include "climate_uart/protocols/mitsubishi.h"
 #include "climate_uart/transport/uart_transport_esp32.h"

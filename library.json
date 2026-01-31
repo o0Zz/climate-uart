@@ -1,30 +1,16 @@
 {
   "name": "climate-uart",
-  "version": "0.1.0",
-  "description": "UART HVAC protocol library with a unified climate API.",
-  "keywords": [
-    "hvac",
-    "climate",
-    "uart",
-    "mitsubishi",
-    "toshiba",
-    "daikin",
-    "hitachi",
-    "lg"
-  ],
+  "version": "1.0.0",
+  "description": "UART HVAC protocol library to control any climate supporting UART control",
   "repository": {
     "type": "git",
     "url": "https://github.com/o0zz/climate-uart"
   },
-  "authors": [
-    {
-      "name": "o0Zz"
-    }
-  ],
-  "license": "MIT",
+  "version": "1.0.0",
   "frameworks": [
     "arduino",
     "espidf"
   ],
-  "platforms": "*"
+  "platforms": "*",
+  "license": "MIT"
 }
