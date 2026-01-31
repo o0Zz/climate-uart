@@ -1,8 +1,9 @@
 #include "climate_uart/protocols/mitsubishi.h"
 
-#include <cstring>
-
 #include "climate_uart/result.h"
+
+#include <string.h>
+#include <stdlib.h>
 
 namespace climate_uart {
 namespace protocols {
@@ -114,7 +115,7 @@ Result Mitsubishi::readPacket(Packet &packet) {
 
 Result Mitsubishi::writePacket(const Packet &packet) {
 	uint8_t buffer[32] = {kStx, packet.cmd, 0x01, 0x30, packet.size};
-	std::memcpy(&buffer[5], packet.data, packet.size);
+	memcpy(&buffer[5], packet.data, packet.size);
 	buffer[5 + packet.size] = crc(buffer, static_cast<uint8_t>(packet.size + 5));
 
 	CLIMATE_LOG_DEBUG("Mitsu Write:");

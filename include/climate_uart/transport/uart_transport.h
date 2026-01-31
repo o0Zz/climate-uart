@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
-
 #include "climate_uart/result.h"
 
 namespace climate_uart {

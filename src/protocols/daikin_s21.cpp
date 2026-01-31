@@ -1,10 +1,10 @@
 #include "climate_uart/protocols/daikin_s21.h"
 
-#include <array>
-#include <cstdlib>
-#include <cstring>
-
 #include "climate_uart/result.h"
+
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 namespace climate_uart {
 namespace protocols {
@@ -21,9 +21,9 @@ constexpr int kMaxTemperature = 32;
 constexpr int kSetpointOffset = 28;
 constexpr int kSetpointStep = 5;
 
-constexpr std::array<uint8_t, 2> kQueryF1{{'F', '1'}};
-constexpr std::array<uint8_t, 2> kQueryF5{{'F', '5'}};
-constexpr std::array<uint8_t, 2> kQueryRh{{'R', 'H'}};
+constexpr uint8_t kQueryF1[2] = {'F', '1'};
+constexpr uint8_t kQueryF5[2] = {'F', '5'};
+constexpr uint8_t kQueryRh[2] = {'R', 'H'};
 }  // namespace
 
 DaikinS21::DaikinS21(transport::UartTransport &uart) : uart_(uart) {}
@@ -168,7 +168,7 @@ Result DaikinS21::readFrame(uint8_t *buffer, uint16_t *outSize) {
 	}
 
 	uint16_t idx = 0;
-	std::memset(buffer, 0x00, *outSize);
+	memset(buffer, 0x00, *outSize);
 
 	while (buffer[idx] != kS21Stx) {
 		if (readByte(&buffer[idx], kResponseTimeoutMs) == kTimeout) {
@@ -316,7 +316,7 @@ Result DaikinS21::getState(ClimateSettings &settings) {
 	uint8_t payload[kMaxFrameSize];
 	uint16_t payloadLen = kMaxFrameSize;
 
-	Result ret = query(kQueryF1.data(), kQueryF1.size(), payload, &payloadLen);
+	Result ret = query(kQueryF1, sizeof(kQueryF1), payload, &payloadLen);
 	if (ret != kSuccess) {
 		CLIMATE_LOG_ERROR("Daikin: Failed to query basic state (%d)", ret);
 		return ret;
@@ -335,7 +335,7 @@ Result DaikinS21::getState(ClimateSettings &settings) {
 	}
 
 	payloadLen = kMaxFrameSize;
-	ret = query(kQueryF5.data(), kQueryF5.size(), payload, &payloadLen);
+	ret = query(kQueryF5, sizeof(kQueryF5), payload, &payloadLen);
 	if (ret == kSuccess && payload[0] == 'G' && payload[1] == '5') {
 		bool swingV = (payload[2] & 1) != 0;
 		bool swingH = (payload[2] & 2) != 0;
@@ -354,7 +354,7 @@ Result DaikinS21::getRoomTemperature(float &temperature) {
 	uint8_t payload[kMaxFrameSize];
 	uint16_t payloadLen = kMaxFrameSize;
 
-	Result ret = query(kQueryRh.data(), kQueryRh.size(), payload, &payloadLen);
+	Result ret = query(kQueryRh, sizeof(kQueryRh), payload, &payloadLen);
 	if (ret != kSuccess) {
 		CLIMATE_LOG_WARNING("Daikin: Failed to query room temp (%d)", ret);
 		return ret;
@@ -370,7 +370,7 @@ Result DaikinS21::getRoomTemperature(float &temperature) {
 		payload[kMaxFrameSize - 1] = 0;
 	}
 
-	temperature = static_cast<float>(std::atoi(reinterpret_cast<char *>(&payload[2]))) / 10.0f;
+	temperature = static_cast<float>(atoi(reinterpret_cast<char *>(&payload[2]))) / 10.0f;
 	return kSuccess;
 }
 

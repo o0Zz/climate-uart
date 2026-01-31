@@ -1,3 +1,5 @@
+#ifdef ESP_PLATFORM
+
 #include "climate_uart/transport/uart_transport_esp32.h"
 
 #include "climate_uart/result.h"
@@ -105,3 +107,5 @@ Result UartTransportESP32::write(const uint8_t *buffer, size_t size) {
 
 }  // namespace transport
 }  // namespace climate_uart
+
+#endif

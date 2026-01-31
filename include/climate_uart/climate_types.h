@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdint>
-
 namespace climate_uart {
 
 enum class HeatpumpMode : uint8_t {

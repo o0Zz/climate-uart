@@ -1,10 +1,10 @@
 #include "climate_uart/protocols/hitachi_hlink.h"
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-
 #include "climate_uart/result.h"
+
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 namespace climate_uart {
 namespace protocols {
@@ -203,42 +203,42 @@ Result HitachiHLink::parseResponse(const char *line, Response &response) {
 	}
 
 	response.dataLen = 0;
-	if (std::strcmp(line, "OK") == 0) {
+	if (strcmp(line, "OK") == 0) {
 		response.status = ResponseStatus::Ok;
 		return kSuccess;
 	}
-	if (std::strcmp(line, "NG") == 0) {
+	if (strcmp(line, "NG") == 0) {
 		response.status = ResponseStatus::Ng;
 		return kSuccess;
 	}
 
 	char temp[kMsgBufferSize];
-	std::strncpy(temp, line, sizeof(temp));
+	strncpy(temp, line, sizeof(temp));
 	temp[sizeof(temp) - 1] = '\0';
 
-	char *token1 = std::strtok(temp, " ");
-	char *token2 = std::strtok(nullptr, " ");
-	char *token3 = std::strtok(nullptr, " ");
+	char *token1 = strtok(temp, " ");
+	char *token2 = strtok(nullptr, " ");
+	char *token3 = strtok(nullptr, " ");
 	if (!token1 || !token2 || !token3) {
 		return kInvalidData;
 	}
 
-	if (std::strcmp(token1, "OK") == 0) {
+	if (strcmp(token1, "OK") == 0) {
 		response.status = ResponseStatus::Ok;
-	} else if (std::strcmp(token1, "NG") == 0) {
+	} else if (strcmp(token1, "NG") == 0) {
 		response.status = ResponseStatus::Ng;
 	} else {
 		response.status = ResponseStatus::Invalid;
 		return kInvalidData;
 	}
 
-	if (std::strncmp(token2, "P=", 2) != 0 || std::strncmp(token3, "C=", 2) != 0) {
+	if (strncmp(token2, "P=", 2) != 0 || strncmp(token3, "C=", 2) != 0) {
 		return kInvalidData;
 	}
 
 	const char *pStr = token2 + 2;
 	const char *cStr = token3 + 2;
-	int pLen = static_cast<int>(std::strlen(pStr));
+	int pLen = static_cast<int>(strlen(pStr));
 	if ((pLen % 2) != 0) {
 		return kInvalidData;
 	}
@@ -250,10 +250,10 @@ Result HitachiHLink::parseResponse(const char *line, Response &response) {
 
 	for (uint8_t i = 0; i < response.dataLen; i++) {
 		char byteStr[3] = {pStr[i * 2], pStr[i * 2 + 1], '\0'};
-		response.data[i] = static_cast<uint8_t>(std::strtoul(byteStr, nullptr, 16));
+		response.data[i] = static_cast<uint8_t>(strtoul(byteStr, nullptr, 16));
 	}
 
-	uint16_t receivedChecksum = static_cast<uint16_t>(std::strtoul(cStr, nullptr, 16));
+	uint16_t receivedChecksum = static_cast<uint16_t>(strtoul(cStr, nullptr, 16));
 	uint16_t calculatedChecksum = 0xFFFF;
 	for (uint8_t i = 0; i < response.dataLen; i++) {
 		calculatedChecksum = static_cast<uint16_t>(calculatedChecksum - response.data[i]);
@@ -274,19 +274,19 @@ Result HitachiHLink::sendFrame(const char *type, uint16_t address, const uint8_t
 
 	char dataStr[kDataMaxLen * 2 + 1] = {0};
 	for (uint8_t i = 0; i < dataLen && i < kDataMaxLen; i++) {
-		std::snprintf(&dataStr[i * 2], 3, "%02X", data[i]);
+		snprintf(&dataStr[i * 2], 3, "%02X", data[i]);
 	}
 
 	uint16_t cs = checksum(address, data, dataLen);
 	char message[kMsgBufferSize] = {0};
 	if (dataLen > 0) {
-		std::snprintf(message, sizeof(message), "%s P=%04X,%s C=%04X\r", type, address, dataStr, cs);
+		snprintf(message, sizeof(message), "%s P=%04X,%s C=%04X\r", type, address, dataStr, cs);
 	} else {
-		std::snprintf(message, sizeof(message), "%s P=%04X C=%04X\r", type, address, cs);
+		snprintf(message, sizeof(message), "%s P=%04X C=%04X\r", type, address, cs);
 	}
 
 	CLIMATE_LOG_DEBUG("Hitachi H-Link Send: %s", message);
-	return uart_.write(reinterpret_cast<const uint8_t *>(message), std::strlen(message));
+	return uart_.write(reinterpret_cast<const uint8_t *>(message), strlen(message));
 }
 
 Result HitachiHLink::query(uint16_t address, Response &response) {

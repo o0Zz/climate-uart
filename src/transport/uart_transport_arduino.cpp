@@ -3,6 +3,9 @@
 
 #include "climate_uart/result.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 namespace climate_uart {
 namespace transport {
 

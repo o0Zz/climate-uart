@@ -1,8 +1,10 @@
 #pragma once
 
-#include "driver/uart.h"
-
 #include "climate_uart/transport/uart_transport.h"
+
+#ifdef ESP_PLATFORM
+
+#include "driver/uart.h"
 
 namespace climate_uart {
 namespace transport {
@@ -36,3 +38,5 @@ private:
 
 }  // namespace transport
 }  // namespace climate_uart
+
+#endif

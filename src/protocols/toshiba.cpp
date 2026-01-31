@@ -1,8 +1,9 @@
 #include "climate_uart/protocols/toshiba.h"
 
-#include <cstring>
-
 #include "climate_uart/result.h"
+
+#include <string.h>
+#include <stdlib.h>
 
 namespace climate_uart {
 namespace protocols {
@@ -266,7 +267,7 @@ Result Toshiba::sendCommand(uint8_t *data, uint16_t dataSize) {
 	buffer[pos++] = 0x00;
 	buffer[pos++] = static_cast<uint8_t>(dataSize);
 	if (dataSize > 0) {
-		std::memcpy(&buffer[pos], data, dataSize);
+		memcpy(&buffer[pos], data, dataSize);
 		pos += dataSize;
 	}
 	buffer[pos] = crc(buffer, static_cast<uint8_t>(pos));

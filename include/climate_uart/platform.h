@@ -1,9 +1,7 @@
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
-#include <cstdarg>
-
+#include <stdint.h>
+#include <stddef.h>
 namespace climate_uart {
 
 enum class LogLevel {

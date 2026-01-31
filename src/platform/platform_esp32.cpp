@@ -1,5 +1,7 @@
 #include "climate_uart/platform.h"
 
+#ifdef ESP_PLATFORM
+
 #include "esp_log.h"
 #include "esp_timer.h"
 
@@ -51,3 +53,5 @@ void log_write(LogLevel level, const char *format, ...)
 }
 
 }  // namespace climate_uart
+
+#endif

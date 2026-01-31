@@ -1,8 +1,9 @@
 #include "climate_uart/protocols/lg_aircon.h"
 
-#include <cstring>
-
 #include "climate_uart/result.h"
+
+#include <string.h>
+#include <stdlib.h>
 
 namespace climate_uart {
 namespace protocols {
@@ -53,7 +54,7 @@ constexpr uint8_t kFanSpeedLg[] = {
 }  // namespace
 
 LgAircon::LgAircon(transport::UartTransport &uart) : uart_(uart) {
-	std::memset(lastRecvStatus_, 0x00, sizeof(lastRecvStatus_));
+	memset(lastRecvStatus_, 0x00, sizeof(lastRecvStatus_));
 }
 
 uint8_t LgAircon::crc(const uint8_t *buffer, size_t size) {
@@ -140,7 +141,7 @@ Result LgAircon::connect() {
 	uint8_t buffer[kMsgLen];
 	connected_ = false;
 
-	std::memset(buffer, 0x00, sizeof(buffer));
+	memset(buffer, 0x00, sizeof(buffer));
 	buffer[0] = kMsgTypeStatusMaster;
 	buffer[1] = 0x00;
 	buffer[8] |= 0x40;
@@ -161,7 +162,7 @@ Result LgAircon::connect() {
 }
 
 Result LgAircon::init() {
-	std::memset(lastRecvStatus_, 0x00, sizeof(lastRecvStatus_));
+	memset(lastRecvStatus_, 0x00, sizeof(lastRecvStatus_));
 	roomTemperature_ = 20.0f;
 
 	Result ret = uart_.open(104, transport::UartParity::None, 1);
@@ -181,7 +182,7 @@ Result LgAircon::setState(const ClimateSettings &settings) {
 	}
 
 	uint8_t buffer[kMsgLen];
-	std::memset(buffer, 0x00, sizeof(buffer));
+	memset(buffer, 0x00, sizeof(buffer));
 	buffer[0] = kMsgTypeStatusMaster;
 	buffer[1] = 0x01;
 	if (settings.action == HeatpumpAction::On) {

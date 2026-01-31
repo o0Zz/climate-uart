@@ -1,8 +1,8 @@
 #include "climate_uart/protocols/sharp.h"
 
-#include <array>
-
 #include "climate_uart/result.h"
+
+#include <stdlib.h>
 
 namespace climate_uart {
 namespace protocols {
@@ -41,13 +41,13 @@ constexpr uint8_t kSwingVLowest = 0x0D;
 constexpr uint8_t kSwingHSwng = 0x0F;
 constexpr uint8_t kSwingHMiddle = 0x01;
 
-constexpr std::array<uint8_t, 7> kMsgInit1{{0x02, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00}};
-constexpr std::array<uint8_t, 8> kMsgInit2{{0x02, 0xFF, 0xFF, 0x01, 0x01, 0x00, 0x01, 0x00}};
-constexpr std::array<uint8_t, 7> kMsgSubscribe1{{0x03, 0xFF, 0xA0, 0x01, 0x00, 0x00, 0x00}};
-constexpr std::array<uint8_t, 7> kMsgSubscribe2{{0x03, 0xFE, 0xA0, 0x01, 0x00, 0x00, 0x00}};
-constexpr std::array<uint8_t, 4> kMsgGetState{{0xDD, 0x02, 0xFC, 0x62}};
-constexpr std::array<uint8_t, 4> kMsgGetStatus{{0xDD, 0x02, 0xFD, 0x62}};
-constexpr std::array<uint8_t, 7> kMsgConnected{{0x03, 0x05, 0xB0, 0x00, 0x10, 0x00, 0x00}};
+constexpr uint8_t kMsgInit1[7] = {0x02, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00};
+constexpr uint8_t kMsgInit2[8] = {0x02, 0xFF, 0xFF, 0x01, 0x01, 0x00, 0x01, 0x00};
+constexpr uint8_t kMsgSubscribe1[7] = {0x03, 0xFF, 0xA0, 0x01, 0x00, 0x00, 0x00};
+constexpr uint8_t kMsgSubscribe2[7] = {0x03, 0xFE, 0xA0, 0x01, 0x00, 0x00, 0x00};
+constexpr uint8_t kMsgGetState[4] = {0xDD, 0x02, 0xFC, 0x62};
+constexpr uint8_t kMsgGetStatus[4] = {0xDD, 0x02, 0xFD, 0x62};
+constexpr uint8_t kMsgConnected[7] = {0x03, 0x05, 0xB0, 0x00, 0x10, 0x00, 0x00};
 }  // namespace
 
 Sharp::Sharp(transport::UartTransport &uart) : uart_(uart) {}
@@ -292,13 +292,13 @@ Result Sharp::connect() {
         const uint8_t *data;
         size_t size;
     } packets[] = {
-        {kMsgInit1.data(), kMsgInit1.size()},
-        {kMsgInit2.data(), kMsgInit2.size()},
-        {kMsgSubscribe1.data(), kMsgSubscribe1.size()},
-        {kMsgSubscribe2.data(), kMsgSubscribe2.size()},
-        {kMsgGetState.data(), kMsgGetState.size()},
-        {kMsgGetStatus.data(), kMsgGetStatus.size()},
-        {kMsgConnected.data(), kMsgConnected.size()},
+        {kMsgInit1, sizeof(kMsgInit1)},
+        {kMsgInit2, sizeof(kMsgInit2)},
+        {kMsgSubscribe1, sizeof(kMsgSubscribe1)},
+        {kMsgSubscribe2, sizeof(kMsgSubscribe2)},
+        {kMsgGetState, sizeof(kMsgGetState)},
+        {kMsgGetStatus, sizeof(kMsgGetStatus)},
+        {kMsgConnected, sizeof(kMsgConnected)},
     };
 
     CLIMATE_LOG_DEBUG("Sharp: Starting handshake sequence ...");
