@@ -10,7 +10,7 @@ namespace protocols {
 
 namespace {
 constexpr uint8_t kStx = 0xFC;
-constexpr uint32_t kTimeoutMs = 200;
+constexpr uint32_t kTimeoutMs = 1000;
 constexpr uint8_t kProtoReply = 0x20;
 
 constexpr uint8_t kHeatpumpModeMitsubishi[] = {
@@ -128,12 +128,12 @@ Result Mitsubishi::connect() {
 	packet.size = 0x02;
 	packet.data[0] = 0xCA;
 	packet.data[1] = 0x01;
-	
+
 	CLIMATE_LOG_DEBUG("Mitsubishi connecting ...");
 
 	connected_ = false;
 	Result ret = writePacket(packet);
-	if (ret == kSuccess) {
+	while (ret == kSuccess) {
 		ret = readPacket(packet);
 		if (ret == kSuccess) {
 			if (packet.cmd == static_cast<uint8_t>(0x5A | kProtoReply) || packet.cmd == 0x5A) {
