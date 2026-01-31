@@ -72,26 +72,20 @@ Result Mitsubishi::readByte(uint8_t *byte, uint32_t timeoutMs) {
 Result Mitsubishi::readPacket(Packet &packet) {
 	packet.stx = 0x00;
 	while (packet.stx != kStx) {
-		if (readByte(&packet.stx, kTimeoutMs) == kTimeout) {
+		if (readByte(&packet.stx, kTimeoutMs) == kTimeout) 
 			return kTimeout;
-		}
-		if (packet.stx != kStx) {
+		if (packet.stx != kStx)
 			CLIMATE_LOG_WARNING("Mitsu: Discarded byte: 0x%02X", packet.stx);
-		}
 	}
 
-	if (readByte(&packet.cmd, kTimeoutMs) != kSuccess) {
+	if (readByte(&packet.cmd, kTimeoutMs) != kSuccess)
 		return kTimeout;
-	}
-	if (readByte(&packet.header[0], kTimeoutMs) != kSuccess) {
+	if (readByte(&packet.header[0], kTimeoutMs) != kSuccess)
 		return kTimeout;
-	}
-	if (readByte(&packet.header[1], kTimeoutMs) != kSuccess) {
+	if (readByte(&packet.header[1], kTimeoutMs) != kSuccess)
 		return kTimeout;
-	}
-	if (readByte(&packet.size, kTimeoutMs) != kSuccess) {
+	if (readByte(&packet.size, kTimeoutMs) != kSuccess) 
 		return kTimeout;
-	}
 
 	for (int i = 0; i < packet.size; i++) {
 		if (readByte(&packet.data[i], kTimeoutMs) != kSuccess) {
@@ -121,7 +115,11 @@ Result Mitsubishi::writePacket(const Packet &packet) {
 	CLIMATE_LOG_DEBUG("Mitsu Write:");
 	CLIMATE_LOG_BUFFER(buffer, packet.size + 6);
 
-	return uart_.write(buffer, packet.size + 6);
+	Result ret = uart_.write(buffer, packet.size + 6);
+	if (ret != kSuccess) {
+		CLIMATE_LOG_ERROR("Mitsu: WritePacket failed: %d", ret);
+	}
+	return ret;
 }
 
 Result Mitsubishi::connect() {
@@ -130,6 +128,8 @@ Result Mitsubishi::connect() {
 	packet.size = 0x02;
 	packet.data[0] = 0xCA;
 	packet.data[1] = 0x01;
+	
+	CLIMATE_LOG_DEBUG("Mitsubishi connecting ...");
 
 	connected_ = false;
 	Result ret = writePacket(packet);
@@ -222,6 +222,7 @@ Result Mitsubishi::getState(ClimateSettings &settings) {
 	}
 
 	if (reply.data[0] != static_cast<uint8_t>(PacketType::GetSettingsInformation)) {
+		CLIMATE_LOG_ERROR("Mitsu: Invalid reply packet type: 0x%02X", reply.data[0]);
 		return kInvalidData;
 	}
 
@@ -286,6 +287,7 @@ Result Mitsubishi::getRoomTemperature(float &temperature) {
 	}
 
 	if (reply.data[0] != static_cast<uint8_t>(PacketType::GetRoomTemperature)) {
+		CLIMATE_LOG_ERROR("Mitsu: Invalid reply packet type: 0x%02X", reply.data[0]);
 		return kInvalidData;
 	}
 
