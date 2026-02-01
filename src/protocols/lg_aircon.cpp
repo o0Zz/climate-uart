@@ -5,6 +5,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+//ref https://github.com/AussieMakerGeek/LG_Aircon_MQTT_interface/blob/master/MQTT_Aircon_Controller_1_2_EtherShield/MQTT_Aircon_Controller_1_2_EtherShield.ino
+//ref https://github.com/JanM321/esphome-lg-controller/blob/main/esphome/components/lg_controller/lg-controller.h
+
 namespace climate_uart {
 namespace protocols {
 

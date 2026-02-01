@@ -5,6 +5,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+//Ref: https://github.com/hadleyrich/MQMitsi/blob/master/mitsi.py
+//Ref: https://github.com/SwiCago/HeatPump/blob/master/src/HeatPump.cpp
+
 namespace climate_uart {
 namespace protocols {
 

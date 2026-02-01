@@ -4,6 +4,8 @@
 
 #include <stdlib.h>
 
+// Ref: https://github.com/sven819/SharpClimateUART-ESPHome
+
 namespace climate_uart {
 namespace protocols {
 

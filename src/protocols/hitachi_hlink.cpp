@@ -6,6 +6,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// H-Link protocol based on:
+// https://github.com/lumixen/esphome-hlink-ac/blob/main/components/hlink_ac/hlink_ac.cpp
+// https://github.com/lumixen/esphome-hlink-ac/blob/main/components/hlink_ac/hlink_ac.h
+// https://hackaday.io/project/168959/logs?sort=newest&page=1
+
 namespace climate_uart {
 namespace protocols {
 

@@ -5,6 +5,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+//Ref: https://github.com/ormsport/ToshibaCarrierHvac/blob/main/src/ToshibaCarrierHvac.cpp
+//Ref: https://github.com/IntExCZ/Toshiba-HVAC/blob/main/HomeAssistant/AppDaemon/apps/toshiba-hvac.py
+
 namespace climate_uart {
 namespace protocols {
 

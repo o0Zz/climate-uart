@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//Ref: https://github.com/joshbenner/esphome-daikin-s21/blob/main/components/daikin_s21/s21.cpp
+
 namespace climate_uart {
 namespace protocols {
 
