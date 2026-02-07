@@ -28,7 +28,7 @@ private:
         uint8_t dataLen{0};
     };
 
-    static uint16_t checksum(uint16_t address, const uint8_t *data, uint8_t dataLen);
+    static uint16_t crc(uint16_t address, const uint8_t *data, uint8_t dataLen);
     static uint16_t modeToWord(HeatpumpMode mode);
     static HeatpumpMode wordToMode(uint16_t val);
     static uint8_t fanToByte(HeatpumpFanSpeed fanSpeed);

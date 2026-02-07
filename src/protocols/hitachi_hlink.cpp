@@ -54,13 +54,13 @@ constexpr uint8_t kPowerOff = 0x00;
 
 HitachiHLink::HitachiHLink(transport::UartTransport &uart) : uart_(uart) {}
 
-uint16_t HitachiHLink::checksum(uint16_t address, const uint8_t *data, uint8_t dataLen) {
+uint16_t HitachiHLink::crc(uint16_t address, const uint8_t *data, uint8_t dataLen) {
 	uint16_t sum = 0xFFFF;
-	sum = static_cast<uint16_t>(sum - static_cast<uint8_t>((address >> 8) & 0xFF));
-	sum = static_cast<uint16_t>(sum - static_cast<uint8_t>(address & 0xFF));
-	for (uint8_t i = 0; i < dataLen; i++) {
-		sum = static_cast<uint16_t>(sum - data[i]);
-	}
+	sum -= (address >> 8) & 0xFF;
+	sum -= address & 0xFF;
+	for (uint8_t i = 0; i < dataLen; i++)
+		sum -= data[i];
+		
 	return sum;
 }
 
@@ -259,10 +259,7 @@ Result HitachiHLink::parseResponse(const char *line, Response &response) {
 	}
 
 	uint16_t receivedChecksum = static_cast<uint16_t>(strtoul(cStr, nullptr, 16));
-	uint16_t calculatedChecksum = 0xFFFF;
-	for (uint8_t i = 0; i < response.dataLen; i++) {
-		calculatedChecksum = static_cast<uint16_t>(calculatedChecksum - response.data[i]);
-	}
+	uint16_t calculatedChecksum = crc(0, response.data, response.dataLen);
 	if (calculatedChecksum != receivedChecksum) {
 		CLIMATE_LOG_WARNING("Hitachi H-Link: Invalid checksum recv=0x%04X, calc=0x%04X", receivedChecksum,
 					 calculatedChecksum);
@@ -282,7 +279,7 @@ Result HitachiHLink::sendFrame(const char *type, uint16_t address, const uint8_t
 		snprintf(&dataStr[i * 2], 3, "%02X", data[i]);
 	}
 
-	uint16_t cs = checksum(address, data, dataLen);
+	uint16_t cs = crc(address, data, dataLen);
 	char message[kMsgBufferSize] = {0};
 	if (dataLen > 0) {
 		snprintf(message, sizeof(message), "%s P=%04X,%s C=%04X\r", type, address, dataStr, cs);
@@ -303,6 +300,7 @@ Result HitachiHLink::query(uint16_t address, Response &response) {
 	char line[kMsgBufferSize] = {0};
 	ret = readLine(line, sizeof(line), kReadTimeoutMs);
 	if (ret != kSuccess) {
+		CLIMATE_LOG_ERROR("Hitachi H-Link: Failed to read response line for address 0x%04X", address);
 		return ret;
 	}
 
@@ -396,6 +394,8 @@ Result HitachiHLink::getState(ClimateSettings &settings) {
 
 	settings = ClimateSettings{};
 
+	//Order is important
+
 	Response response;
 	Result ret = query(kFeaturePowerState, response);
 	if (ret != kSuccess || response.dataLen < 1) {
@@ -420,17 +420,17 @@ Result HitachiHLink::getState(ClimateSettings &settings) {
 		settings.temperature = static_cast<int>((response.data[0] << 8) | response.data[1]);
 	}
 
-	ret = query(kFeatureFanMode, response);
-	if (ret != kSuccess || response.dataLen < 1) {
-		return kInvalidData;
-	}
-	settings.fanSpeed = byteToFan(response.data[0]);
-
 	ret = query(kFeatureSwingMode, response);
 	if (ret != kSuccess || response.dataLen < 1) {
 		return kInvalidData;
 	}
 	settings.vaneMode = byteToVane(response.data[0]);
+
+	ret = query(kFeatureFanMode, response);
+	if (ret != kSuccess || response.dataLen < 1) {
+		return kInvalidData;
+	}
+	settings.fanSpeed = byteToFan(response.data[0]);
 
 	CLIMATE_LOG_DEBUG("Hitachi H-Link state: mode=%u, temp=%d, fan=%u, action=%u, vane=%u",
 					 static_cast<uint8_t>(settings.mode), settings.temperature,
