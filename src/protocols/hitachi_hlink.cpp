@@ -19,7 +19,6 @@ constexpr uint32_t kHlinkBaudrate = 9600;
 constexpr uint32_t kReadTimeoutMs = 300;
 constexpr uint16_t kMsgBufferSize = 64;
 constexpr uint8_t kDataMaxLen = 8;
-constexpr uint8_t kAsciiCr = 0x0D;
 
 constexpr uint16_t kFeaturePowerState = 0x0000;
 constexpr uint16_t kFeatureMode = 0x0001;
@@ -180,11 +179,12 @@ Result HitachiHLink::readLine(char *buffer, uint16_t bufferSize, uint32_t timeou
 
 	uint32_t start = time_now_ms();
 	uint16_t index = 0;
-	while (time_elapsed_ms(start) < timeoutMs) {
+	while (time_elapsed_ms(start) < timeoutMs) 
+	{
 		uint8_t byte = 0;
 		Result ret = readByte(&byte, timeoutMs);
 		if (ret == kSuccess) {
-			if (byte == kAsciiCr) {
+			if (byte == '\r') {
 				if (index < bufferSize) {
 					buffer[index] = '\0';
 					return kSuccess;
@@ -228,11 +228,14 @@ Result HitachiHLink::parseResponse(const char *line, Response &response) {
 		return kInvalidData;
 	}
 
-	if (strcmp(token1, "OK") == 0) {
+		//Do not strcmp, as there may be garbage before the "OK"/"NG" due to serial noise. Just check if "OK"/"NG" is contained in the first token.
+	if (strstr(token1, "OK")) {
 		response.status = ResponseStatus::Ok;
-	} else if (strcmp(token1, "NG") == 0) {
+	} else if (strstr(token1, "NG")) {
 		response.status = ResponseStatus::Ng;
 	} else {
+		CLIMATE_LOG_ERROR("Hitachi H-Link: Invalid response prefix: %s", token1);
+		CLIMATE_LOG_BUFFER(line, strlen(line));
 		response.status = ResponseStatus::Invalid;
 		return kInvalidData;
 	}
