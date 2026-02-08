@@ -3,6 +3,10 @@
 
 #ifdef ARDUINO
 
+// Do not enable ARDUINO log when you are using Hardware Serial as it interfer with climate UART's UART communication.
+// You can enable it if you are using SoftwareSerial or other non-Hardware Serial transport.
+#define ARDUINO_LOG_ENABLED 0
+
 #include <Arduino.h>
 
 namespace climate_uart {
@@ -30,11 +34,13 @@ const char *level_prefix(LogLevel level) {
     }
 }
 
-void log_buffer(const uint8_t *buffer, size_t size) {
+void log_buffer(const uint8_t *buffer, size_t size) 
+{
     if (!buffer || size == 0 || !Serial) {
         return;
     }
 
+#if ARDUINO_LOG_ENABLED
     Serial.print("[climate-uart][B] ");
     for (size_t i = 0; i < size; ++i) {
         if (buffer[i] < 0x10) {
@@ -46,14 +52,12 @@ void log_buffer(const uint8_t *buffer, size_t size) {
         }
     }
     Serial.println();
+#endif
 }
 
 void log_write(LogLevel level, const char *format, ...) 
 {
-    if (!Serial) {
-        return;
-    }
-
+#if ARDUINO_LOG_ENABLED
     va_list args;
     va_start(args, format);
 
@@ -70,6 +74,7 @@ void log_write(LogLevel level, const char *format, ...)
     Serial.println(buffer);
 
     va_end(args);
+#endif
 }
 
 }  // namespace climate_uart
