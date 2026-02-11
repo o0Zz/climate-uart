@@ -110,6 +110,7 @@ HeatpumpMode Fujitsu::byteToMode(uint8_t val) {
 uint8_t Fujitsu::fanToByte(HeatpumpFanSpeed fanSpeed) {
     switch (fanSpeed) {
         case HeatpumpFanSpeed::Auto: return kFujiFanAuto;
+        case HeatpumpFanSpeed::Quiet: return kFujiFanQuiet;
         case HeatpumpFanSpeed::Low:  return kFujiFanLow;
         case HeatpumpFanSpeed::Med:  return kFujiFanMedium;
         case HeatpumpFanSpeed::High: return kFujiFanHigh;
@@ -120,7 +121,7 @@ uint8_t Fujitsu::fanToByte(HeatpumpFanSpeed fanSpeed) {
 HeatpumpFanSpeed Fujitsu::byteToFan(uint8_t val) {
     switch (val) {
         case kFujiFanAuto:   return HeatpumpFanSpeed::Auto;
-        case kFujiFanQuiet:  return HeatpumpFanSpeed::Low;
+        case kFujiFanQuiet:  return HeatpumpFanSpeed::Quiet;
         case kFujiFanLow:    return HeatpumpFanSpeed::Low;
         case kFujiFanMedium: return HeatpumpFanSpeed::Med;
         case kFujiFanHigh:   return HeatpumpFanSpeed::High;

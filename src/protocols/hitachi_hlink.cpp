@@ -106,6 +106,8 @@ uint8_t HitachiHLink::fanToByte(HeatpumpFanSpeed fanSpeed) {
 			return kFanMed;
 		case HeatpumpFanSpeed::Low:
 			return kFanLow;
+		case HeatpumpFanSpeed::Quiet:
+			return kFanQuiet;
 		case HeatpumpFanSpeed::Auto:
 		default:
 			return kFanAuto;
@@ -120,8 +122,9 @@ HeatpumpFanSpeed HitachiHLink::byteToFan(uint8_t val) {
 			return HeatpumpFanSpeed::Med;
 		case kFanLow:
 			return HeatpumpFanSpeed::Low;
-		case kFanAuto:
 		case kFanQuiet:
+			return HeatpumpFanSpeed::Quiet;
+		case kFanAuto:
 		default:
 			return HeatpumpFanSpeed::Auto;
 	}

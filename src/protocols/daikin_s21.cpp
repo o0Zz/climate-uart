@@ -82,6 +82,7 @@ HeatpumpFanSpeed DaikinS21::byteToFan(uint8_t code) {
 		case 'A':
 			return HeatpumpFanSpeed::Auto;
 		case 'B':
+			return HeatpumpFanSpeed::Quiet;
 		case '3':
 			return HeatpumpFanSpeed::Low;
 		case '4':
@@ -103,6 +104,8 @@ uint8_t DaikinS21::fanToByte(HeatpumpFanSpeed fan) {
 			return '5';
 		case HeatpumpFanSpeed::High:
 			return '7';
+		case HeatpumpFanSpeed::Quiet:
+			return 'B';
 		case HeatpumpFanSpeed::Auto:
 		default:
 			return 'A';

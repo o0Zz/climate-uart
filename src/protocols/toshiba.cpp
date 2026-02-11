@@ -111,6 +111,8 @@ uint8_t Toshiba::fanToByte(HeatpumpFanSpeed fanSpeed) {
 			return kFanLvl3;
 		case HeatpumpFanSpeed::High:
 			return kFanLvl5;
+		case HeatpumpFanSpeed::Quiet:
+			return kFanQuiet;
 		default:
 			return kFanAuto;
 	}
@@ -121,6 +123,7 @@ HeatpumpFanSpeed Toshiba::byteToFan(uint8_t val) {
 		case kFanAuto:
 			return HeatpumpFanSpeed::Auto;
 		case kFanQuiet:
+			return HeatpumpFanSpeed::Quiet;
 		case kFanLvl1:
 			return HeatpumpFanSpeed::Low;
 		case kFanLvl2:

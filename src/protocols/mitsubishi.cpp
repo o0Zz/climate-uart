@@ -30,7 +30,8 @@ constexpr uint8_t kFanSpeedMitsubishi[] = {
 	0x00,  // Auto
 	0x06,  // High
 	0x03,  // Med
-	0x01   // Low
+	0x02,  // Low
+	0x01   // Quiet
 };
 
 constexpr uint8_t kVaneModeMitsubishi[] = {
@@ -242,7 +243,9 @@ Result Mitsubishi::getState(ClimateSettings &settings) {
 
 	settings.temperature = (0x0F - reply.data[5]) + 16;
 
-	if (reply.data[6] == 0x01 || reply.data[6] == 0x02) {
+	if (reply.data[6] == 0x01) {
+		settings.fanSpeed = HeatpumpFanSpeed::Quiet;
+	} else if (reply.data[6] == 0x02) {
 		settings.fanSpeed = HeatpumpFanSpeed::Low;
 	} else if (reply.data[6] == 0x03 || reply.data[6] == 0x04) {
 		settings.fanSpeed = HeatpumpFanSpeed::Med;

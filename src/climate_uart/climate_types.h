@@ -18,6 +18,7 @@ enum class HeatpumpFanSpeed : uint8_t {
     High,
     Med,
     Low,
+    Quiet,
     Count
 };
 

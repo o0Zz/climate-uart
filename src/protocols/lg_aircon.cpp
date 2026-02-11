@@ -52,7 +52,8 @@ constexpr uint8_t kFanSpeedLg[] = {
 	kFanAuto,
 	kFanHigh,
 	kFanMed,
-	kFanLow
+	kFanLow,
+	kFanQuiet
 };
 }  // namespace
 
@@ -273,8 +274,10 @@ Result LgAircon::getState(ClimateSettings &settings) {
 		case kFanHigh:
 			settings.fanSpeed = HeatpumpFanSpeed::High;
 			break;
-		case kFanAuto:
 		case kFanQuiet:
+			settings.fanSpeed = HeatpumpFanSpeed::Quiet;
+			break;
+		case kFanAuto:
 		default:
 			settings.fanSpeed = HeatpumpFanSpeed::Auto;
 			break;

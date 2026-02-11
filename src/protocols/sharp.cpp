@@ -108,6 +108,8 @@ uint8_t Sharp::fanToByte(HeatpumpFanSpeed fanSpeed) {
     switch (fanSpeed) {
         case HeatpumpFanSpeed::Auto:
             return kFanAuto;
+        case HeatpumpFanSpeed::Quiet:
+            return kFanLow;
         case HeatpumpFanSpeed::Low:
             return kFanLow;
         case HeatpumpFanSpeed::Med:
